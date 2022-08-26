@@ -65,6 +65,49 @@ namespace StudyStatistic
 
             ws.Cells[row, col].Value2 = words;
         }
+
+        //读取更多的信息，封装到字典里，这次不只是名字
+        //把这个excel的当前表的信息读到字典里，key是员工编号，值是这个员工 封装
+        internal void ReadEmolyee(Dictionary<string, Empolyee> excel2IdAndName)
+        {
+            int colnum = ws.UsedRange.Columns.Count;
+            int rownum = ws.UsedRange.Rows.Count;
+            int Idcolindex = 0;
+            _Excel.Range allRange = ws.Range[ws.Cells[2,1],ws.Cells[rownum,colnum]];
+            string name;
+            string id;
+            string department;
+            string post;
+            string condition;
+            string zhuanti;
+            string xuexicondition;
+            string StartTime;
+            string FinishTime;
+            string LastStudyTime;
+            string StudyTime;
+            string FaceStudyTime;
+            string TotalTime;
+            foreach( _Excel.Range row in allRange.Rows) 
+            {
+                var resizerow = row.Resize[1, colnum];
+                object[,] Arow = resizerow.Value2;
+                name = Arow[1,1].ToString().Replace("\t", String.Empty);
+                id = Arow[1,2].ToString().Replace("\t", String.Empty);
+                department = Arow[1, 3].ToString().Replace("\t", String.Empty);
+                post = Arow[1, 4].ToString().Replace("\t", String.Empty);
+                condition = Arow[1, 5].ToString().Replace("\t", String.Empty);
+                zhuanti = Arow[1, 6].ToString().Replace("\t", String.Empty);
+                xuexicondition = Arow[1, 7].ToString().Replace("\t", String.Empty);
+                StartTime = Arow[1, 8].ToString().Replace("\t", String.Empty);
+                FinishTime = Arow[1, 9].ToString().Replace("\t", String.Empty);
+                LastStudyTime = Arow[1, 10].ToString().Replace("\t", String.Empty);
+                StudyTime = Arow[1, 11].ToString().Replace("\t", String.Empty);
+                FaceStudyTime = Arow[1, 12].ToString().Replace("\t", String.Empty);
+                TotalTime = Arow[1, 13].ToString().Replace("\t", String.Empty);
+                excel2IdAndName.Add(id, new Empolyee(id, name, department, post, condition, zhuanti, xuexicondition, StartTime, FinishTime, LastStudyTime, StudyTime, FaceStudyTime, TotalTime));
+            }     
+        }
+
         public void save() 
         {
             wb.Saved = true;
