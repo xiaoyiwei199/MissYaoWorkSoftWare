@@ -21,7 +21,7 @@ namespace StudyStatistic
         string available;
         //学习的专题
         string zhuanti;
-        //有三种，未开始，学习中，已完成
+        //有两种 学习中，已完成
         string finished;
         string StartTime;
         string EndTime;

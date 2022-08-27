@@ -24,10 +24,39 @@ namespace StudyStatistic
             }
         }
         //这些都是有学习数据的人，但是有的人是学习中，有的人是已完成，统计他们的数据即可
-        //统计每个部门名称，应学人数，完成人数，完成率，未完成人数，
-        public static void tongji(Dictionary<string, Empolyee> study) 
+        //统计每个部门名称，每个部门人数，完成人数，完成率，未完成人数，
+        public static void tongji(Dictionary<string, Empolyee> study,ArrayList department,Dictionary<string,int> finished,Dictionary<string,int> inprocess) 
         {
-            
+            foreach(Empolyee ep in study.Values) 
+            {
+                if (ep.Finished.Equals("学习中")) 
+                {
+                    //如果是第一次判断这个部门
+                    if (!inprocess.ContainsKey(ep.Development)) 
+                    {
+                        inprocess.Add(ep.Development, 1);
+                    }
+                    else 
+                    {
+                        inprocess[ep.Development] += 1;
+                    }
+                }
+                //已经完成的人
+                else
+                {
+                    //如果是第一次判断这个部门
+                    if (!finished.ContainsKey(ep.Development))
+                    {
+                        finished.Add(ep.Development, 1);
+                    }
+                    else
+                    {
+                        finished[ep.Development] += 1;
+                    }
+                }
+                
+            }
+            Console.WriteLine();
         }
         static void Main(string[] args)
         {
@@ -40,8 +69,8 @@ namespace StudyStatistic
 
             Dictionary<string, string> excel1IdAndName = new Dictionary<string, string>();
             Dictionary<string, Empolyee> excel2IdAndName = new Dictionary<string, Empolyee>();
-            Dictionary<string, Empolyee> nostudyIdAndName = new Dictionary<string, Empolyee>();
-            Dictionary<string, Empolyee> haveStudy = new Dictionary<string, Empolyee>();
+            Dictionary<string, int> finished = new Dictionary<string, int>();
+            Dictionary<string, int> inprocess = new Dictionary<string, int>();
             Excel excel1 = new Excel("C:\\Users\\Administrator\\Desktop\\学习情况统计\\简洁花名册副本.xlsx", 1);
             //学习副本里全覆盖Employee这些属性，但是花名册当中并没有那些属性。
             //我目前要做的就是统计，excel1只是用来筛选出没有开始学习的人的
@@ -53,14 +82,18 @@ namespace StudyStatistic
             excel1.ReadIdAndName(excel1IdAndName);
             excel2.ReadEmolyee(excel2IdAndName,Department);
             NoStudy1(excel1IdAndName, excel2IdAndName, nostudy);
+            tongji(excel2IdAndName, Department,finished,inprocess);
             //excel1.Sort("C");
             //excel2.Sort("B");
             //NoStudy(excel1.GetWorksheet(), excel2.GetWorksheet(), nostudy);
             Excel res = new Excel("C:\\Users\\Administrator\\Desktop\\学习情况统计\\Result1.xlsx");
+            Excel statistic = new Excel("C:\\Users\\Administrator\\Desktop\\学习情况统计\\Statistic.xlsx");
             res.fillworksheet(nostudy);
+            statistic.FillStatistic(finished, inprocess, Department);
             excel1.exit();
             excel2.exit();
             res.exit();
+            statistic.exit();
         }
         
     }

@@ -116,7 +116,7 @@ namespace StudyStatistic
                 StudyTime = Arow[1, 11].ToString().Replace("\t", String.Empty);
                 FaceStudyTime = Arow[1, 12].ToString().Replace("\t", String.Empty);
                 TotalTime = Arow[1, 13].ToString().Replace("\t", String.Empty);
-                excel2IdAndName.Add(id, new Empolyee(id, name, department, post, condition, zhuanti, xuexicondition, StartTime, FinishTime, LastStudyTime, StudyTime, FaceStudyTime, TotalTime));
+                excel2IdAndName.Add(id, new Empolyee(id, name, shortdepartment, post, condition, zhuanti, xuexicondition, StartTime, FinishTime, LastStudyTime, StudyTime, FaceStudyTime, TotalTime));
             }     
         }
 
@@ -202,6 +202,31 @@ namespace StudyStatistic
                 WriteCell(i , j + 1, employee.Name);
                 i++;
                 
+            }
+        }
+        public void FillStatistic(Dictionary<string,int> finished,Dictionary<string,int> inprocess,ArrayList department)  
+        {
+            int xuexizhong;
+            int wancheng;
+            int total;
+            double percent;
+            int row = 1;
+            int col = 0;
+            foreach(string dp in department) 
+            {
+                //对于xuexizhong和wancheng，其实不一定有值的
+                //可能这个部门都学完了，没有在学习中的
+                //也有可能这个部门都在学习中，没有学完的
+                xuexizhong = inprocess.ContainsKey(dp) ? inprocess[dp] : 0;
+                wancheng = finished.ContainsKey(dp) ? finished[dp] : 0;
+                total = xuexizhong + wancheng;
+                percent =(double) wancheng / total;
+                WriteCell(row, col, dp);
+                WriteCell(row, col + 1, total.ToString());
+                WriteCell(row, col + 2, wancheng.ToString());
+                WriteCell(row, col + 3, percent.ToString("0.00"));
+                WriteCell(row, col + 4, xuexizhong.ToString());
+                row++;
             }
         }
     }
