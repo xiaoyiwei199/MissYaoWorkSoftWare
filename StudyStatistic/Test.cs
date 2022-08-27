@@ -37,6 +37,7 @@ namespace StudyStatistic
             //int.TryParse(cleaned, out value);
 
             //Console.WriteLine(value);
+
             Dictionary<string, string> excel1IdAndName = new Dictionary<string, string>();
             Dictionary<string, Empolyee> excel2IdAndName = new Dictionary<string, Empolyee>();
             Dictionary<string, Empolyee> nostudyIdAndName = new Dictionary<string, Empolyee>();

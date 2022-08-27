@@ -82,7 +82,6 @@ namespace StudyStatistic
             string id;
             string department;
             string shortdepartment;
-            string shortdepartment2;
             string post;
             string condition;
             string zhuanti;
@@ -93,8 +92,7 @@ namespace StudyStatistic
             string StudyTime;
             string FaceStudyTime;
             string TotalTime;
-            string pattern = @"中移物联网有限公司/(.+)";
-            string pattern2 = @"(\w+)/(.+)";
+            string[] d;
             foreach ( _Excel.Range row in allRange.Rows) 
             {
                 var resizerow = row.Resize[1, colnum];
@@ -102,25 +100,11 @@ namespace StudyStatistic
                 name = Arow[1,1].ToString().Replace("\t", String.Empty);
                 id = Arow[1,2].ToString().Replace("\t", String.Empty);
                 department = Arow[1, 3].ToString().Replace("\t", String.Empty);
-                Match match = Regex.Match(department, pattern);
-                shortdepartment = match.Groups[1].Value;
-                if (shortdepartment.Contains("/"))
+                d = department.Split("/");
+                shortdepartment = d[1];
+                if (!Department.Contains(shortdepartment)) 
                 {
-                    //接着截取
-                    Match match2 = Regex.Match(shortdepartment, pattern2);
-                    shortdepartment2 = match2.Groups[1].Value;
-                    if (!Department.Contains(shortdepartment2))
-                    {
-                        Department.Add(shortdepartment2);
-                    }
-                }
-                else
-                {
-                    //不用截取了
-                    if (!Department.Contains(shortdepartment))
-                    {
-                        Department.Add(shortdepartment);
-                    }
+                    Department.Add(shortdepartment);
                 }
                 post = Arow[1, 4].ToString().Replace("\t", String.Empty);
                 condition = Arow[1, 5].ToString().Replace("\t", String.Empty);
