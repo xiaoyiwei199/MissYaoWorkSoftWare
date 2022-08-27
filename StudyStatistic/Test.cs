@@ -24,6 +24,7 @@ namespace StudyStatistic
             }
         }
         //这些都是有学习数据的人，但是有的人是学习中，有的人是已完成，统计他们的数据即可
+        //统计每个部门名称，应学人数，完成人数，完成率，未完成人数，
         public static void tongji(Dictionary<string, Empolyee> study) 
         {
             
@@ -44,11 +45,12 @@ namespace StudyStatistic
             //学习副本里全覆盖Employee这些属性，但是花名册当中并没有那些属性。
             //我目前要做的就是统计，excel1只是用来筛选出没有开始学习的人的
             //剩下的工作都是excel2当中做的，复制过去即可
-            Excel excel2 = new Excel("C:\\Users\\Administrator\\Desktop\\学习情况统计\\学习副本.csv", 1);
+            Excel excel2 = new Excel("C:\\Users\\Administrator\\Desktop\\学习情况统计\\结果副本.xlsx", 1);
             
             ArrayList nostudy = new ArrayList();
+            ArrayList Department = new ArrayList();
             excel1.ReadIdAndName(excel1IdAndName);
-            excel2.ReadEmolyee(excel2IdAndName);
+            excel2.ReadEmolyee(excel2IdAndName,Department);
             NoStudy1(excel1IdAndName, excel2IdAndName, nostudy);
             //excel1.Sort("C");
             //excel2.Sort("B");
