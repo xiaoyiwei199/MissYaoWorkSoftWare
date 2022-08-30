@@ -30,10 +30,11 @@ namespace StudyStatistic
         string mianshouTime;
         string TotalStudyTime;
 
-        public Empolyee(string id, string name)
+        public Empolyee(string id, string name,string department)
         {
             this.id = id;
             this.name = name;
+            this.development = department;
         }
         public Empolyee(string id, string name, string development, string job, string available, string zhuanti, string finished, string startTime, string endTime, string lastStudy, string studyTime, string mianshouTime, string totalStudyTime)
         {

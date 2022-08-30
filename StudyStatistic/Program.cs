@@ -14,9 +14,6 @@ namespace StudyStatistic
         Worksheet ws;
         public Excel(string path,int Sheet) 
         {
-            excel.Visible = false;
-            excel.DisplayAlerts = false; 
-            excel.ScreenUpdating = false;
             this.path = path;
             wb = excel.Workbooks.Open(path);
             ws = wb.Worksheets[Sheet];
@@ -72,11 +69,10 @@ namespace StudyStatistic
 
         //读取更多的信息，封装到字典里，这次不只是名字
         //把这个excel的当前表的信息读到字典里，key是员工编号，值是这个员工 封装
-        internal void ReadEmolyee(Dictionary<string, Empolyee> excel2IdAndName,ArrayList Department)
+        internal void ReadEmolyee(Dictionary<string, Empolyee> excel2IdAndName)
         {
             int colnum = ws.UsedRange.Columns.Count;
             int rownum = ws.UsedRange.Rows.Count;
-            int Idcolindex = 0;
             _Excel.Range allRange = ws.Range[ws.Cells[2,1],ws.Cells[rownum,colnum]];
             string name;
             string id;
@@ -97,27 +93,81 @@ namespace StudyStatistic
             {
                 var resizerow = row.Resize[1, colnum];
                 object[,] Arow = resizerow.Value2;
-                name = Arow[1,1].ToString().Replace("\t", String.Empty);
-                id = Arow[1,2].ToString().Replace("\t", String.Empty);
-                department = Arow[1, 3].ToString().Replace("\t", String.Empty);
-                d = department.Split("/");
-                shortdepartment = d[1];
-                if (!Department.Contains(shortdepartment)) 
+                zhuanti = Arow[1, 6].ToString().Replace("\t", String.Empty);
+                //只有专题不为空的才有统计的必要
+                if (!zhuanti.Equals("-"))
+                {
+                    name = Arow[1, 1].ToString().Replace("\t", String.Empty);
+                    id = Arow[1, 2].ToString().Replace("\t", String.Empty);
+                    if (id.Length != 11) 
+                    {
+                        id = "E00" + id;
+                    }
+                    department = Arow[1, 3].ToString().Replace("\t", String.Empty);
+                    if (department.Contains("/"))
+                    {
+                        d = department.Split("/");
+                        shortdepartment = d[1];
+                    }
+                    else
+                    {
+                        shortdepartment = department;
+                    }
+                    if (shortdepartment.Equals("法律事务部")) 
+                    {
+                        shortdepartment = "综合部（董事会办公室、法律事务部）";
+                    }
+                    post = Arow[1, 4].ToString().Replace("\t", String.Empty);
+                    condition = Arow[1, 5].ToString().Replace("\t", String.Empty);
+                    xuexicondition = Arow[1, 7].ToString().Replace("\t", String.Empty);
+                    StartTime = Arow[1, 8].ToString().Replace("\t", String.Empty);
+                    FinishTime = Arow[1, 9].ToString().Replace("\t", String.Empty);
+                    LastStudyTime = Arow[1, 10].ToString().Replace("\t", String.Empty);
+                    StudyTime = Arow[1, 11].ToString().Replace("\t", String.Empty);
+                    FaceStudyTime = Arow[1, 12].ToString().Replace("\t", String.Empty);
+                    TotalTime = Arow[1, 13].ToString().Replace("\t", String.Empty);
+                    excel2IdAndName.Add(id, new Empolyee(id, name, shortdepartment, post, condition, zhuanti, xuexicondition, StartTime, FinishTime, LastStudyTime, StudyTime, FaceStudyTime, TotalTime));
+                }
+                
+            }     
+        }
+
+        internal void ReadeHuamingce(Dictionary<string, Empolyee> hmc, ArrayList Department)
+        {
+            int colnum = ws.UsedRange.Columns.Count;
+            int rownum = ws.UsedRange.Rows.Count;
+            _Excel.Range allRange = ws.Range[ws.Cells[2, 1], ws.Cells[rownum, colnum]];
+            string name;
+            string id;
+            string department;
+            string shortdepartment;
+            string[] d;
+            foreach (_Excel.Range row in allRange.Rows) 
+            {
+                var resizerow = row.Resize[1, colnum];
+                object[,] Arow = resizerow.Value2;
+                id = Arow[1, 3].ToString();
+                name = Arow[1, 4].ToString();
+                department = Arow[1, 6].ToString();
+                if (department.Contains("/")) 
+                {
+                    d = department.Split("/");
+                    shortdepartment = d[1];
+                }
+                else
+                {
+                    shortdepartment = department;
+                }
+                if (shortdepartment.Equals("法律事务部"))
+                {
+                    shortdepartment = "综合部（董事会办公室、法律事务部）";
+                }
+                if (!Department.Contains(shortdepartment))
                 {
                     Department.Add(shortdepartment);
                 }
-                post = Arow[1, 4].ToString().Replace("\t", String.Empty);
-                condition = Arow[1, 5].ToString().Replace("\t", String.Empty);
-                zhuanti = Arow[1, 6].ToString().Replace("\t", String.Empty);
-                xuexicondition = Arow[1, 7].ToString().Replace("\t", String.Empty);
-                StartTime = Arow[1, 8].ToString().Replace("\t", String.Empty);
-                FinishTime = Arow[1, 9].ToString().Replace("\t", String.Empty);
-                LastStudyTime = Arow[1, 10].ToString().Replace("\t", String.Empty);
-                StudyTime = Arow[1, 11].ToString().Replace("\t", String.Empty);
-                FaceStudyTime = Arow[1, 12].ToString().Replace("\t", String.Empty);
-                TotalTime = Arow[1, 13].ToString().Replace("\t", String.Empty);
-                excel2IdAndName.Add(id, new Empolyee(id, name, shortdepartment, post, condition, zhuanti, xuexicondition, StartTime, FinishTime, LastStudyTime, StudyTime, FaceStudyTime, TotalTime));
-            }     
+                hmc.Add(id, new Empolyee(id, name, shortdepartment));
+            }
         }
 
         public void save() 
@@ -141,56 +191,6 @@ namespace StudyStatistic
             newWorksheet.Name = name;
         }
 
-        //把当前excel的Id和Name读到字典里面
-        internal void ReadIdAndName(Dictionary<string, string> excel1IdAndName)
-        {
-            int colnum = ws.UsedRange.Columns.Count;
-            int rownum = ws.UsedRange.Rows.Count;
-            int Idcolindex = 0;
-            int namecolIndex = 0;
-            //遍历第一行
-            for(int i = 0; i < colnum; i++) 
-            {
-                string header = ws.Cells[1, i + 1].Value2;
-                if (header.Equals("员工编号") || header.Equals("员工编码"))
-                    Idcolindex = i + 1;//得到Id那一列的index
-                else if (header.Equals("姓名"))
-                    namecolIndex = i + 1;//得到姓名那一列的index
-            }
-            string id;
-            string name;
-            //由于给我的格式，员工编码和姓名一定是连着的，因此可以直接得到两列数据
-            //但是有两种情况，一种是员工编码在左，姓名编码在右，一种是员工编码在右，姓名编码在左
-            if (Idcolindex > namecolIndex) 
-            {
-                //员工编码在右
-                _Excel.Range IdAndNameRange = ws.Range[ws.Cells[2, namecolIndex], ws.Cells[rownum, Idcolindex]];
-                object[,] idAndName = IdAndNameRange.Value2;
-
-                for (int i = 0; i < rownum - 1; i++)
-                {
-                    id = idAndName[i + 1, 2].ToString().Replace("\t", String.Empty);
-                    name = idAndName[i + 1, 1].ToString().Replace("\t", String.Empty);
-                    excel1IdAndName.Add(id,name);
-                }
-            }
-            else
-            {
-                //员工编码在左
-                _Excel.Range IdAndNameRange = ws.Range[ws.Cells[2, Idcolindex], ws.Cells[rownum, namecolIndex]];
-                object[,] idAndName = IdAndNameRange.Value2;
-                for(int i = 0; i < rownum-1; i++) 
-                {
-                    id = idAndName[i + 1, 1].ToString().Replace("\t", String.Empty);
-                    name = idAndName[i + 1, 2].ToString().Replace("\t", String.Empty);
-                    excel1IdAndName.Add(id, name);
-                }
-            }
-
-
-            
-        }
-
         public void fillworksheet(ArrayList res) 
         {
             //因为有标题头，都得从第二行第二列开始写
@@ -206,6 +206,12 @@ namespace StudyStatistic
         }
         public void FillStatistic(Dictionary<string,int> finished,Dictionary<string,int> inprocess,ArrayList department)  
         {
+            //1.填写表头
+            WriteCell(0, 0,"部门正式名称");
+            WriteCell(0, 1, "总计");
+            WriteCell(0, 2, "已完成");
+            WriteCell(0, 3, "完成率");
+            WriteCell(0, 4, "未完成");
             int xuexizhong;
             int wancheng;
             int total;
@@ -224,7 +230,7 @@ namespace StudyStatistic
                 WriteCell(row, col, dp);
                 WriteCell(row, col + 1, total.ToString());
                 WriteCell(row, col + 2, wancheng.ToString());
-                WriteCell(row, col + 3, percent.ToString("0.00"));
+                WriteCell(row, col + 3, percent.ToString("0.0000"));
                 WriteCell(row, col + 4, xuexizhong.ToString());
                 row++;
             }
