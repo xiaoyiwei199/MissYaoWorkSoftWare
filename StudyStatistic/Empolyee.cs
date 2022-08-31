@@ -29,12 +29,14 @@ namespace StudyStatistic
         string studyTime;
         string mianshouTime;
         string TotalStudyTime;
+        string email;
 
-        public Empolyee(string id, string name,string department)
+        public Empolyee(string id, string name,string department,string email)
         {
             this.id = id;
             this.name = name;
             this.development = department;
+            this.email = email;
         }
         public Empolyee(string id, string name, string development, string job, string available, string zhuanti, string finished, string startTime, string endTime, string lastStudy, string studyTime, string mianshouTime, string totalStudyTime)
         {
@@ -59,12 +61,13 @@ namespace StudyStatistic
         public string Available { get => available; set => available = value; }
         public string Zhuanti { get => zhuanti; set => zhuanti = value; }
         public string Finished { get => finished; set => finished = value; }
-        public string StartTime1 { get => StartTime; set => StartTime = value; }
+        public string StartTime1{ get => StartTime; set => StartTime = value; }
         public string EndTime1 { get => EndTime; set => EndTime = value; }
         public string LastStudy1 { get => LastStudy; set => LastStudy = value; }
         public string StudyTime { get => studyTime; set => studyTime = value; }
         public string MianshouTime { get => mianshouTime; set => mianshouTime = value; }
         public string TotalStudyTime1 { get => TotalStudyTime; set => TotalStudyTime = value; }
         public string Id { get => id; set => id = value; }
+        public string Email { get => email; set => email = value; }
     }
 }
