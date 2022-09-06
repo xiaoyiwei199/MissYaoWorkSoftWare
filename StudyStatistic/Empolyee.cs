@@ -30,6 +30,11 @@ namespace StudyStatistic
         string mianshouTime;
         string TotalStudyTime;
         string email;
+        private string condition;
+        private string xuexicondition;
+        private string finishTime;
+        private string lastStudyTime;
+        private string faceStudyTime;
 
         public Empolyee(string id, string name,string department,string email)
         {
@@ -38,6 +43,9 @@ namespace StudyStatistic
             this.development = department;
             this.email = email;
         }
+
+
+
         public Empolyee(string id, string name, string development, string job, string available, string zhuanti, string finished, string startTime, string endTime, string lastStudy, string studyTime, string mianshouTime, string totalStudyTime)
         {
             this.id = id;

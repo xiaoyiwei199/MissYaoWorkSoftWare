@@ -143,7 +143,7 @@ namespace StudyStatistic
                     {
                         if (xuexicondition.Equals("已完成")) 
                         {
-                            excel2IdAndName[id] = new Empolyee(id,name,shortdepartment,post,condition,zhuanti,xuexicondition,StartTime,FinishTime,LastStudyTime,StudyTime,FaceStudyTime);
+                            excel2IdAndName[id] = new Empolyee(id,name,shortdepartment,post,condition,zhuanti,xuexicondition,StartTime,FinishTime,LastStudyTime,StudyTime,FaceStudyTime,TotalTime);
                         }
                     }
                 }
